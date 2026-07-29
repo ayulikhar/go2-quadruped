@@ -3,6 +3,10 @@
 import math
 import os
 import time
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import imu_bridge
 
 import mujoco
 import mujoco.viewer
@@ -20,18 +24,19 @@ SCENE = os.path.join(
 NOMINAL = {"hip": 0.0, "thigh": 0.9, "calf": -1.8}
 
 # gait parameters.
-HIP_AMP  = 0.3
-KNEE_AMP = 0.6
-FREQ     = 2.0
-DELTA    = -0.61
+HIP_AMP  = 0.20
+KNEE_AMP = 0.45
+CALF_AMP = 0.65
+FREQ     = 1.4
+DELTA    = -0.45
 
 # Diagonal trot phase assignment
 PHASE = {"FR": 0.0, "RL": 0.0, "FL": math.pi, "RR": math.pi}
 
 # PD gains for torque-actuator tracking.
-KP_HIP,   KD_HIP   = 40.0, 2.0
-KP_THIGH, KD_THIGH = 250.0, 8.0
-KP_CALF,  KD_CALF  = 200.0, 6.0
+KP_HIP,   KD_HIP   = 35.0, 4.0
+KP_THIGH, KD_THIGH = 180.0, 12.0
+KP_CALF,  KD_CALF  = 150.0, 10.0
 
 JOINTS = [
     "FL_hip", "FL_thigh", "FL_calf",
@@ -39,6 +44,12 @@ JOINTS = [
     "RL_hip", "RL_thigh", "RL_calf",
     "RR_hip", "RR_thigh", "RR_calf",
 ]
+
+
+def imu_bridge_reader(model, data, step):
+    for sensor_name in ("imu_accel", "imu_gyro", "imu_quat"):
+        value = imu_bridge.read_sensor(sensor_name)
+        print(f"[IMU] {sensor_name}: {value}")
 
 
 def main():
@@ -62,12 +73,15 @@ def main():
     print(f"Loaded: {SCENE}")
     print(f"SKILL.md forward trot: DELTA={DELTA}, FREQ={FREQ} Hz. Close viewer to exit.")
 
+    imu_bridge.publish_state(model, data)
+    imu_bridge.run_reader_in_thread(imu_bridge_reader)
+
     omega = 2.0 * math.pi * FREQ
 
     with mujoco.viewer.launch_passive(model, data) as viewer:
         start  = time.time()
         SETTLE = 0.5
-        RAMP   = 0.8
+        RAMP   = 1.5
         while viewer.is_running():
             t      = time.time() - start
             gait_t = max(0.0, t - SETTLE)
@@ -98,6 +112,7 @@ def main():
                     data.ctrl[actid[jname]] = tau
 
             mujoco.mj_step(model, data)
+            imu_bridge.tick()
             viewer.sync()
 
 

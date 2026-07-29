@@ -61,7 +61,7 @@
   </asset>
 
   <worldbody>
-    <body name="base" pos="0 0 0.445" childclass="go2">
+    <body name="trunk" pos="0 0 0.27">
       <inertial pos="0.021112 0 -0.005366" quat="-0.000543471 0.713435 -0.00173769 0.700719" mass="6.921"
         diaginertia="0.107027 0.0980771 0.0244531"/>
       <freejoint/>
@@ -211,6 +211,12 @@
     <motor class="hip" name="RR_thigh" joint="RR_thigh_joint"/>
     <motor class="knee" name="RR_calf" joint="RR_calf_joint"/>
   </actuator>
+
+  <sensor>
+    <accelerometer name="imu_accel" site="imu"/>
+    <gyro name="imu_gyro" site="imu"/>
+    <framequat name="imu_quat" objtype="site" objname="imu"/>
+  </sensor>
 
   <keyframe>
     <key name="home" qpos="0 0 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"
