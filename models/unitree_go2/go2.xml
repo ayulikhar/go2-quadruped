@@ -61,7 +61,7 @@
   </asset>
 
   <worldbody>
-    <body name="trunk" pos="0 0 0.27">
+    <body name="trunk" pos="4 1.34 0.27">
       <inertial pos="0.021112 0 -0.005366" quat="-0.000543471 0.713435 -0.00173769 0.700719" mass="6.921"
         diaginertia="0.107027 0.0980771 0.0244531"/>
       <freejoint/>

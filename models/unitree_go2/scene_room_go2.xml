@@ -1,0 +1,21 @@
+<mujoco model="go2 room navigation">
+  <include file="scene_room.xml"/>
+  <include file="go2.xml"/>
+
+  <worldbody>
+    <!-- Extra obstacle placed in the open center corridor so the straight
+         line from the start marker to the goal marker is actually blocked
+         and the A* planner has to detour around something. -->
+    <geom name="obs_center_bar" type="box" pos="4.0 4.4 0.3" size="0.45 0.15 0.3"
+          rgba="0.75 0.2 0.2 1"/>
+  </worldbody>
+
+  <keyframe>
+    <!-- Robot spawns in the room's far-left corner (0.7, 0.7), facing +y
+         toward the goal marker at (4, 7.46). Joint order matches go2.xml's
+         own "home" keyframe. -->
+    <key name="start"
+         qpos="0.7 0.7 0.27 1 0 0 0 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"
+         ctrl="0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8 0 0.9 -1.8"/>
+  </keyframe>
+</mujoco>

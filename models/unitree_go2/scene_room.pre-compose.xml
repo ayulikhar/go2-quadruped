@@ -1,0 +1,49 @@
+<mujoco model="go2 room with obstacles">
+  <include file="go2.xml"/>
+
+  <statistic center="0 0 0.5" extent="9"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="-130" elevation="-25"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="8 8" reflectance="0.15"/>
+    <material name="wall_mat" rgba="0.55 0.55 0.58 1"/>
+    <material name="obstacle_mat" rgba="0.8 0.35 0.15 1"/>
+    <material name="obstacle_mat2" rgba="0.2 0.45 0.75 1"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 3" dir="0 0 -1" directional="true"/>
+    <light pos="3 3 3" dir="-1 -1 -1" directional="false" diffuse="0.3 0.3 0.3"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+
+    <!-- Room walls: interior clear area is roughly x,y in [-3.9, 3.9] -->
+    <geom name="wall_north" type="box" pos="0 4.0 0.5" size="4.1 0.1 0.5" material="wall_mat"/>
+    <geom name="wall_south" type="box" pos="0 -4.0 0.5" size="4.1 0.1 0.5" material="wall_mat"/>
+    <geom name="wall_east"  type="box" pos="4.0 0 0.5" size="0.1 4.1 0.5" material="wall_mat"/>
+    <geom name="wall_west"  type="box" pos="-4.0 0 0.5" size="0.1 4.1 0.5" material="wall_mat"/>
+
+    <!-- Obstacles (coordinates shared with controllers/astar_planner.py OBSTACLES list) -->
+    <geom name="obs_box1" type="box" pos="1.2 0.6 0.3" size="0.3 0.3 0.3" material="obstacle_mat"/>
+    <geom name="obs_box2" type="box" pos="1.2 -1.2 0.3" size="0.3 0.3 0.3" material="obstacle_mat"/>
+    <geom name="obs_cyl1" type="cylinder" pos="-0.8 1.5 0.3" size="0.35 0.3" material="obstacle_mat2"/>
+    <geom name="obs_box3" type="box" pos="2.6 2.6 0.3" size="0.35 0.35 0.3" material="obstacle_mat"/>
+    <geom name="obs_cyl2" type="cylinder" pos="2.0 0.2 0.3" size="0.3 0.3" material="obstacle_mat2"/>
+    <geom name="obs_box4" type="box" pos="-1.5 -1.0 0.3" size="0.4 0.25 0.3" material="obstacle_mat"/>
+
+    <!-- Goal marker: fixed flat highlighted circle marking the A* target -->
+    <body name="goal_marker" pos="3.2 3.2 0.05">
+      <geom name="goal_ring_outer" type="cylinder" size="0.22 0.005" pos="0 0 0.001"
+            rgba="0.95 0.85 0.1 0.6" contype="0" conaffinity="0"/>
+      <geom name="goal_ring_inner" type="cylinder" size="0.15 0.006" pos="0 0 0.002"
+            rgba="0.95 0.85 0.1 0.95" contype="0" conaffinity="0"/>
+    </body>
+  </worldbody>
+</mujoco>

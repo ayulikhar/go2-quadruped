@@ -1,0 +1,99 @@
+<mujoco model="drift_world">
+  <compiler assetdir="assets" angle="degree"/>
+
+  <visual>
+    <headlight ambient="0.3 0.3 0.3" diffuse="0.2 0.2 0.2" specular="0.05 0.05 0.05"/>
+  </visual>
+
+
+  <asset>
+    <texture type="skybox" colorspace="auto" builtin="gradient" rgb1="0.56 0.65 0.75" rgb2="0.88 0.92 0.96" width="256" height="1536"/>
+    <texture type="2d" colorspace="auto" name="tex_ground" builtin="checker" mark="edge" rgb1="0.55 0.55 0.55" rgb2="0.62 0.62 0.62" markrgb="0.5 0.5 0.5" width="256" height="256"/>
+    <material name="mat_ground" texture="tex_ground" texrepeat="4 4" reflectance="0.05"/>
+    <material name="mat_wall" rgba="0.91 0.9 0.87 1"/>
+    <material name="mat_fence" rgba="0.85 0.72 0.1 0.55"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" size="4 4 0.05" pos="4 4 0" type="plane" material="mat_ground"/>
+    <light name="key" pos="4 4 4.8" dir="0.250627 0.350878 -0.902258" type="directional" diffuse="0.75 0.75 0.75" specular="0.1 0.1 0.1"/>
+    <!-- Floor markers below are flush-painted decals, not physical platforms:
+         disable their collision (contype/conaffinity=0) so the robot's feet
+         pass through them instead of standing on top of / getting embedded
+         inside a few centimetres of solid box at floor level. -->
+    <body name="nav_floor_grid_tile" pos="4 4.4 0">
+      <geom name="nav_floor_grid_tile_fill" size="0.24 0.24 0.01" pos="0 0 0.01" type="box" rgba="0.75 0.75 0.78 1" contype="0" conaffinity="0"/>
+      <geom name="nav_floor_grid_tile_edge_n" size="0.2495 0.01 0.0102" pos="0 0.24 0.0112" type="box" rgba="0.4 0.4 0.42 1" contype="0" conaffinity="0"/>
+      <geom name="nav_floor_grid_tile_edge_s" size="0.2495 0.01 0.0102" pos="0 -0.24 0.0112" type="box" rgba="0.4 0.4 0.42 1" contype="0" conaffinity="0"/>
+      <geom name="nav_floor_grid_tile_edge_e" size="0.01 0.2495 0.0102" pos="0.24 0 0.0112" type="box" rgba="0.4 0.4 0.42 1" contype="0" conaffinity="0"/>
+      <geom name="nav_floor_grid_tile_edge_w" size="0.01 0.2495 0.0107" pos="-0.24 0 0.0112" type="box" rgba="0.4 0.4 0.42 1" contype="0" conaffinity="0"/>
+    </body>
+    <body name="nav_goal_marker" pos="4 7.46 0">
+      <geom name="nav_goal_marker_base" size="0.2 0.2 0.025" pos="0 0 0.025" type="box" rgba="0.9 0.15 0.15 1" contype="0" conaffinity="0"/>
+      <geom name="nav_goal_marker_check1" size="0.1 0.1 0.0027" pos="-0.1 0.1 0.0532" type="box" rgba="1 1 1 1" contype="0" conaffinity="0"/>
+      <geom name="nav_goal_marker_check2" size="0.1 0.1 0.0027" pos="0.1 -0.1 0.0532" type="box" rgba="1 1 1 1" contype="0" conaffinity="0"/>
+    </body>
+    <body name="nav_path_waypoint_marker" pos="4.44 4.415 0">
+      <geom name="nav_path_waypoint_marker_base" size="0.15 0.025" pos="0 0 0.025" type="cylinder" rgba="0.2 0.4 0.9 1" contype="0" conaffinity="0"/>
+    </body>
+    <body name="nav_box_obstacle_small_1" pos="1.625 2.1336 0">
+      <geom name="nav_box_obstacle_small_1_body" size="0.2 0.2 0.2" pos="0 0 0.2" type="box" rgba="0.75 0.55 0.2 1"/>
+    </body>
+    <body name="nav_box_obstacle_small_2" pos="6.375 2.1336 0">
+      <geom name="nav_box_obstacle_small_2_body" size="0.2 0.2 0.2" pos="0 0 0.2" type="box" rgba="0.75 0.55 0.2 1"/>
+    </body>
+    <body name="nav_box_obstacle_small_3" pos="1.625 5.911 0">
+      <geom name="nav_box_obstacle_small_3_body" size="0.2 0.2 0.2" pos="0 0 0.2" type="box" rgba="0.75 0.55 0.2 1"/>
+    </body>
+    <body name="nav_box_obstacle_small_4" pos="6.375 5.911 0">
+      <geom name="nav_box_obstacle_small_4_body" size="0.2 0.2 0.2" pos="0 0 0.2" type="box" rgba="0.75 0.55 0.2 1"/>
+    </body>
+    <body name="nav_box_obstacle_medium_1" pos="2.155 2.9392 0">
+      <geom name="nav_box_obstacle_medium_1_body" size="0.3 0.3 0.3" pos="0 0 0.3" type="box" rgba="0.85 0.55 0.15 1"/>
+      <geom name="nav_box_obstacle_medium_1_band" size="0.31 0.31 0.03" pos="0 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+    </body>
+    <body name="nav_box_obstacle_medium_2" pos="5.845 2.9392 0">
+      <geom name="nav_box_obstacle_medium_2_body" size="0.3 0.3 0.3" pos="0 0 0.3" type="box" rgba="0.85 0.55 0.15 1"/>
+      <geom name="nav_box_obstacle_medium_2_band" size="0.31 0.31 0.03" pos="0 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+    </body>
+    <body name="nav_box_obstacle_medium_3" pos="2.155 5.8608 0">
+      <geom name="nav_box_obstacle_medium_3_body" size="0.3 0.3 0.3" pos="0 0 0.3" type="box" rgba="0.85 0.55 0.15 1"/>
+      <geom name="nav_box_obstacle_medium_3_band" size="0.31 0.31 0.03" pos="0 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+    </body>
+    <body name="nav_crate_obstacle_1" pos="5.87 5.883 0">
+      <geom name="nav_crate_obstacle_1_body" size="0.25 0.25 0.25" pos="0 0 0.25" type="box" rgba="0.55 0.38 0.2 1"/>
+      <geom name="nav_crate_obstacle_1_slat1" size="0.26 0.26 0.02" pos="0 0 0.42" type="box" rgba="0.4 0.28 0.15 1"/>
+      <geom name="nav_crate_obstacle_1_slat2" size="0.26 0.26 0.02" pos="0 0 0.08" type="box" rgba="0.4 0.28 0.15 1"/>
+    </body>
+    <body name="nav_crate_obstacle_2" pos="2.25 2.3 0">
+      <geom name="nav_crate_obstacle_2_body" size="0.25 0.25 0.25" pos="0 0 0.25" type="box" rgba="0.55 0.35 0.15 1"/>
+      <geom name="nav_crate_obstacle_2_lid" size="0.2495 0.2495 0.0198" pos="0 0 0.4798" type="box" rgba="0.45 0.28 0.12 1"/>
+      <geom name="nav_crate_obstacle_2_slat_h" size="0.2495 0.02 0.02" pos="0 0 0.25" type="box" rgba="0.4 0.24 0.1 1"/>
+    </body>
+    <body name="nav_crate_obstacle_3" pos="5.75 2.3 0">
+      <geom name="nav_crate_obstacle_3_body" size="0.25 0.25 0.25" pos="0 0 0.25" type="box" rgba="0.55 0.35 0.15 1"/>
+      <geom name="nav_crate_obstacle_3_lid" size="0.2495 0.2495 0.0198" pos="0 0 0.4798" type="box" rgba="0.45 0.28 0.12 1"/>
+      <geom name="nav_crate_obstacle_3_slat_h" size="0.2495 0.02 0.02" pos="0 0 0.25" type="box" rgba="0.4 0.24 0.1 1"/>
+    </body>
+    <body name="nav_wall_barrier_short_1" pos="2.2776 5.4561 0">
+      <geom name="nav_wall_barrier_short_1_panel" size="0.5 0.1 0.3" pos="0 0 0.3" type="box" rgba="0.9 0.6 0.1 1"/>
+      <geom name="nav_wall_barrier_short_1_stripe1" size="0.1 0.101 0.28" pos="-0.3 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+      <geom name="nav_wall_barrier_short_1_stripe2" size="0.1 0.101 0.28" pos="0.1 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+    </body>
+    <body name="nav_wall_barrier_short_2" pos="5.75 5.4693 0">
+      <geom name="nav_wall_barrier_short_2_panel" size="0.5 0.1 0.3" pos="0 0 0.3" type="box" rgba="0.9 0.6 0.1 1"/>
+      <geom name="nav_wall_barrier_short_2_stripe1" size="0.1 0.101 0.28" pos="-0.3 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+      <geom name="nav_wall_barrier_short_2_stripe2" size="0.1 0.101 0.28" pos="0.1 0 0.3" type="box" rgba="0.1 0.1 0.1 1"/>
+    </body>
+    <body name="nav_cylindrical_pillar_1" pos="1.566 2.96 0">
+      <geom name="nav_cylindrical_pillar_1_shaft" size="0.15 1.4995" pos="0 0 1.5" type="cylinder" rgba="0.55 0.55 0.58 1"/>
+      <geom name="nav_cylindrical_pillar_1_base" size="0.18 0.03" pos="0 0 0.03" type="cylinder" rgba="0.4 0.4 0.42 1"/>
+      <geom name="nav_cylindrical_pillar_1_cap" size="0.16 0.02" pos="0 0 2.98" type="cylinder" rgba="0.45 0.45 0.48 1"/>
+    </body>
+    <body name="nav_cylindrical_pillar_2" pos="6.12 6.326 0">
+      <geom name="nav_cylindrical_pillar_2_shaft" size="0.15 1.4995" pos="0 0 1.5" type="cylinder" rgba="0.55 0.55 0.58 1"/>
+      <geom name="nav_cylindrical_pillar_2_base" size="0.18 0.03" pos="0 0 0.03" type="cylinder" rgba="0.4 0.4 0.42 1"/>
+      <geom name="nav_cylindrical_pillar_2_cap" size="0.16 0.02" pos="0 0 2.98" type="cylinder" rgba="0.45 0.45 0.48 1"/>
+    </body>
+  </worldbody>
+</mujoco>
